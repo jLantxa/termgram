@@ -1,4 +1,5 @@
 CXX_FLAGS := -std=c++20 -O2 -Wall -Werror
+
 INCLUDE := include
 SRC := src
 BUILD := build
@@ -23,7 +24,7 @@ SOURCES += \
 all:
 	@mkdir -p $(BUILD)
 
-	$(CXX) \
+	$(CXX) $(CXX_FLAGS) \
 	-I $(INCLUDE) \
 	$(SOURCES) \
 	$(TD_DYNAMIC_LIBS) $(TD_STATIC_LIBS) \
