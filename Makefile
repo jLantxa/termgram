@@ -17,7 +17,7 @@ TD_DYNAMIC_LIBS += \
 	-lsqlite3 -lz -lpthread -lcrypto -lssl
 
 SOURCES += \
-	# $(SRC)/main.cpp
+	$(SRC)/main.cpp
 
 all:
 	@mkdir -p $(BUILD)
