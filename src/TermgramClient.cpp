@@ -16,27 +16,18 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#ifndef _TERMGRAM_INCLUDE_APP_CONFIGURATION_HPP_
-#define _TERMGRAM_INCLUDE_APP_CONFIGURATION_HPP_
+#include "TermgramClient.hpp"
 
-#include <cstdint>
+TermgramClient::TermgramClient(const AppConfiguration& app_config)
+:   m_app_config(app_config)
+{
 
-#include <string>
+}
 
-#include <td/telegram/td_api.h>
+void TermgramClient::Run() {
+    m_running = true;
 
-/**
- * \brief Application configuration
- */
-struct AppConfiguration {
-    /* Use TDlib in test mode */
-    const bool test_mode = true;
+    while (m_running) {
 
-    /** TDlib App API ID */
-    const int32_t api_id;
-
-    /** TDlib App API Hash */
-    const std::string api_hash;
-};
-
-#endif  // _TERMGRAM_INCLUDE_APP_CONFIGURATION_HPP_
+    }
+}

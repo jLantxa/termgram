@@ -16,6 +16,66 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-int main(int argc, char const *argv[]) {
+#include <unistd.h>
+
+#include <string>
+
+#include "AppConfiguration.hpp"
+#include "TermgramClient.hpp"
+
+static constexpr bool FORCE_TEST_MODE = true;
+
+bool ValidateAppConfig(const AppConfiguration& app_config) {
+    const bool api_id_error = (app_config.api_id == -1);
+    const bool api_hash_error = (app_config.api_hash.compare("") == 0);
+
+    if (api_id_error || api_hash_error) {
+        return false;
+    }
+
+    return true;
+}
+
+void ArgumentError(char* arg0) {
+    fprintf(stderr, "Usage: %s [-t] <-i api_id> <-h api_hash>\n", arg0);
+}
+
+int main(int argc, char *argv[]) {
+    bool test_mode = false;
+    int32_t api_id = -1;
+    std::string api_hash;
+
+    int opt;
+    while ((opt = getopt(argc, argv, "ti:h:")) != -1) {
+        switch (opt) {
+        case 't':
+            test_mode = true;
+            break;
+        case 'i':
+            api_id = atoi(optarg);
+            break;
+        case 'h':
+            api_hash = std::string {optarg};
+            break;
+        default: /* '?' */
+            ArgumentError(argv[0]);
+            return -1;
+        }
+    }
+
+    const AppConfiguration app_config = {
+        .test_mode = test_mode || FORCE_TEST_MODE,
+        .api_id = api_id,
+        .api_hash = api_hash,
+    };
+
+    if (!ValidateAppConfig(app_config)) {
+        ArgumentError(argv[0]);
+        return -1;
+    }
+
+    TermgramClient client(app_config);
+    client.Run();
+
     return 0;
 }

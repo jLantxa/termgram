@@ -23,15 +23,15 @@
 
 class TermgramClient final {
 public:
-    TermgramClient();
-    ~TermgramClient();
+    TermgramClient(const AppConfiguration& app_config);
+    ~TermgramClient() = default;
 
-    int Run();
+    void Run();
 
 private:
     bool m_running = false;
 
-    AppConfiguration m_app_configuration;
+    const AppConfiguration m_app_config;
 };
 
 #endif  // _TERMGRAM_INCLUDE_TERMGRAM_CLIENT_HPP_

@@ -17,8 +17,14 @@ TD_DYNAMIC_LIBS += \
 	-lsqlite3 -lz -lpthread -lcrypto -lssl
 
 SOURCES += \
+	$(SRC)/TermgramClient.cpp \
 	$(SRC)/main.cpp
 
 all:
 	@mkdir -p $(BUILD)
-	$(CXX) $(SOURCES) $(TD_DYNAMIC_LIBS) $(TD_STATIC_LIBS) -o $(BUILD)/$(TARGET)
+
+	$(CXX) \
+	-I $(INCLUDE) \
+	$(SOURCES) \
+	$(TD_DYNAMIC_LIBS) $(TD_STATIC_LIBS) \
+	-o $(BUILD)/$(TARGET)

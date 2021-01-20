@@ -16,27 +16,11 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#ifndef _TERMGRAM_INCLUDE_APP_CONFIGURATION_HPP_
-#define _TERMGRAM_INCLUDE_APP_CONFIGURATION_HPP_
-
-#include <cstdint>
+#ifndef _TERMGRAM_INCLUDE_VERSION_HPP_
+#define _TERMGRAM_INCLUDE_VERSION_HPP_
 
 #include <string>
 
-#include <td/telegram/td_api.h>
+const std::string TERMGRAM_VERSION = "0.0";
 
-/**
- * \brief Application configuration
- */
-struct AppConfiguration {
-    /* Use TDlib in test mode */
-    const bool test_mode = true;
-
-    /** TDlib App API ID */
-    const int32_t api_id;
-
-    /** TDlib App API Hash */
-    const std::string api_hash;
-};
-
-#endif  // _TERMGRAM_INCLUDE_APP_CONFIGURATION_HPP_
+#endif  // _TERMGRAM_INCLUDE_VERSION_HPP_
