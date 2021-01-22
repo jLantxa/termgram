@@ -1,4 +1,7 @@
 .vscode/
 
-td
-build
+# Static tdlib libraries
+td/
+
+build/
+doc/

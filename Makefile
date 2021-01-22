@@ -29,3 +29,6 @@ all:
 	$(SOURCES) \
 	$(TD_DYNAMIC_LIBS) $(TD_STATIC_LIBS) \
 	-o $(BUILD)/$(TARGET)
+
+docs:
+	doxygen
