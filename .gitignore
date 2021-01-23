@@ -3,5 +3,8 @@
 # Static tdlib libraries
 td/
 
+# Database
+tdlib/
+
 build/
 doc/

@@ -13,9 +13,10 @@ TD_STATIC_LIBS += \
 	$(TD)/libtdactor.a \
 	$(TD)/libtdnet.a \
 	$(TD)/libtdutils.a \
+	$(TD)/libtdsqlite.a \
 	$(TD)/libtddb.a
 TD_DYNAMIC_LIBS += \
-	-lsqlite3 -lz -lpthread -lcrypto -lssl
+	-lsqlite3 -lz -pthread -lcrypto -lssl
 
 SOURCES += \
 	$(SRC)/TermgramClient.cpp \

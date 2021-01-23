@@ -25,6 +25,8 @@
 
 #include <td/telegram/td_api.h>
 
+#include "version.hpp"
+
 /**
  * \brief Application configuration
  */
@@ -37,6 +39,8 @@ struct AppConfiguration {
 
     /** TDlib App API Hash */
     const std::string api_hash;
+
+    const std::string version = TERMGRAM_VERSION;
 };
 
 #endif  // _TERMGRAM_INCLUDE_APP_CONFIGURATION_HPP_

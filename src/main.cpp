@@ -23,8 +23,6 @@
 #include "AppConfiguration.hpp"
 #include "TermgramClient.hpp"
 
-static constexpr bool FORCE_TEST_MODE = true;
-
 bool ValidateAppConfig(const AppConfiguration& app_config) {
     const bool api_id_error = (app_config.api_id == -1);
     const bool api_hash_error = (app_config.api_hash.compare("") == 0);
@@ -64,7 +62,7 @@ int main(int argc, char *argv[]) {
     }
 
     const AppConfiguration app_config = {
-        .test_mode = test_mode || FORCE_TEST_MODE,
+        .test_mode = test_mode,
         .api_id = api_id,
         .api_hash = api_hash,
     };
