@@ -69,7 +69,7 @@ void TermgramClient::Init() {
 }
 
 void TermgramClient::Restart() {
-    Log::i(LOG_TAG, "%s()", __func__);
+    Log.i(LOG_TAG, "%s()", __func__);
     m_client_manager.reset();
     Init();
 }
@@ -81,7 +81,7 @@ void TermgramClient::Quit() {
 void TermgramClient::Run() {
     m_running = true;
 
-    Log::i(LOG_TAG, "Client starts");
+    Log.i(LOG_TAG, "Client starts");
     while (m_running) {
         if (m_need_restart) {
             Restart();
@@ -106,7 +106,7 @@ void TermgramClient::SendQuery(object_ptr<td::td_api::Function> function, QueryH
 
 void TermgramClient::ProcessResponse(td::ClientManager::Response response) {
     if (!response.object) {
-        Log::v(LOG_TAG, "%s(): Received null response object", __func__);
+        Log.v(LOG_TAG, "%s(): Received null response object", __func__);
         return;
     }
 
@@ -134,7 +134,7 @@ void TermgramClient::OnUpdate(object_ptr<Object> update) {
         }
 
         default:
-            Log::v(LOG_TAG, "Unhandled update ID %d", update_id);
+            Log.v(LOG_TAG, "Unhandled update ID %d", update_id);
             break;
     }
 }
@@ -150,7 +150,7 @@ void TermgramClient::OnAuthStateUpdate(int32_t auth_state) {
     m_auth_query_id++;
     switch (auth_state) {
         case authorizationStateWaitTdlibParameters::ID: {
-            Log::i(LOG_TAG, "%s(): authorizationStateWaitTdlibParameters", __func__);
+            Log.i(LOG_TAG, "%s(): authorizationStateWaitTdlibParameters", __func__);
 
             auto parameters = td::td_api::make_object<tdlibParameters>();
             parameters->use_test_dc_ = m_app_config.test_mode;
@@ -169,7 +169,7 @@ void TermgramClient::OnAuthStateUpdate(int32_t auth_state) {
         }
 
         case authorizationStateWaitEncryptionKey::ID: {
-            Log::i(LOG_TAG, "%s(): authorizationStateWaitEncryptionKey", __func__);
+            Log.i(LOG_TAG, "%s(): authorizationStateWaitEncryptionKey", __func__);
 
             std::cout << "Enter encryption key or DESTROY: " << std::flush;
             std::string key;
@@ -184,7 +184,7 @@ void TermgramClient::OnAuthStateUpdate(int32_t auth_state) {
         }
 
         case authorizationStateWaitPhoneNumber::ID: {
-            Log::i(LOG_TAG, "%s(): authorizationStateWaitPhoneNumber", __func__);
+            Log.i(LOG_TAG, "%s(): authorizationStateWaitPhoneNumber", __func__);
 
             std::cout << "Enter phone number: " << std::flush;
             std::string phone_number;
@@ -194,7 +194,7 @@ void TermgramClient::OnAuthStateUpdate(int32_t auth_state) {
         }
 
         case authorizationStateWaitCode::ID: {
-            Log::i(LOG_TAG, "%s(): authorizationStateWaitCode", __func__);
+            Log.i(LOG_TAG, "%s(): authorizationStateWaitCode", __func__);
 
             std::cout << "Enter authentication code: " << std::flush;
             std::string code;
@@ -205,15 +205,15 @@ void TermgramClient::OnAuthStateUpdate(int32_t auth_state) {
         }
 
         case authorizationStateWaitOtherDeviceConfirmation::ID:
-            Log::i(LOG_TAG, "%s(): authorizationStateWaitOtherDeviceConfirmation", __func__);
+            Log.i(LOG_TAG, "%s(): authorizationStateWaitOtherDeviceConfirmation", __func__);
             break;
 
         case authorizationStateWaitRegistration::ID:
-            Log::i(LOG_TAG, "%s(): authorizationStateWaitRegistration", __func__);
+            Log.i(LOG_TAG, "%s(): authorizationStateWaitRegistration", __func__);
             break;
 
         case authorizationStateWaitPassword::ID: {
-            Log::i(LOG_TAG, "%s(): authorizationStateWaitPassword", __func__);
+            Log.i(LOG_TAG, "%s(): authorizationStateWaitPassword", __func__);
 
             std::cout << "Enter authentication password: " << std::flush;
             std::string password;
@@ -224,28 +224,28 @@ void TermgramClient::OnAuthStateUpdate(int32_t auth_state) {
         }
 
         case authorizationStateReady::ID:
-            Log::i(LOG_TAG, "%s(): authorizationStateReady", __func__);
+            Log.i(LOG_TAG, "%s(): authorizationStateReady", __func__);
             m_authorised = true;
             break;
 
         case authorizationStateLoggingOut::ID:
-            Log::i(LOG_TAG, "%s(): authorizationStateLoggingOut", __func__);
+            Log.i(LOG_TAG, "%s(): authorizationStateLoggingOut", __func__);
             m_authorised = false;
             break;
 
         case authorizationStateClosing::ID:
-            Log::i(LOG_TAG, "%s(): authorizationStateClosing", __func__);
+            Log.i(LOG_TAG, "%s(): authorizationStateClosing", __func__);
             m_authorised = false;
             break;
 
         case authorizationStateClosed::ID:
-            Log::i(LOG_TAG, "%s(): authorizationStateClosed", __func__);
+            Log.i(LOG_TAG, "%s(): authorizationStateClosed", __func__);
             m_authorised = false;
             m_need_restart = true;
             break;
 
         default:
-            Log::v(LOG_TAG, "%s(): unhandled auth state update", __func__);
+            Log.v(LOG_TAG, "%s(): unhandled auth state update", __func__);
             break;
     }
 }

@@ -89,11 +89,6 @@ private:
      */
     std::unordered_map<uint64_t, QueryHandler> m_query_handlers;
 
-    /** Handler for authentication queries */
-    const QueryHandler AUTH_HANDLER = [this](object_ptr<Object> object) {
-        CheckAuthError(std::move(object));
-    };
-
     /**
      * \brief Send a query to the Telegram server.
      * \param function Query function. Container for the data to be sent.
@@ -101,11 +96,6 @@ private:
      * is received.
      */
     void SendQuery(object_ptr<td::td_api::Function> function, QueryHandler handler = {});
-
-    /**
-     * \brief Check a authentication response object for error.
-     */
-    void CheckAuthError(object_ptr<Object> object);
 
     /**
      * \brief Process a response object from the server
@@ -124,6 +114,16 @@ private:
      * \param auth_state State of the authentication process.
      */
     void OnAuthStateUpdate(int32_t auth_state);
+
+    /**
+     * \brief Check a authentication response object for error.
+     */
+    void CheckAuthError(object_ptr<Object> object);
+
+    /** Handler for authentication queries */
+    const QueryHandler AUTH_HANDLER = [this](object_ptr<Object> object) {
+        CheckAuthError(std::move(object));
+    };
 };
 
 #endif  // _TERMGRAM_INCLUDE_TERMGRAM_CLIENT_HPP_
