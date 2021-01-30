@@ -25,6 +25,7 @@
 
 #include "TermgramClient.hpp"
 
+extern jltx::debug::Logger Log;
 static __attribute_used__ const char* LOG_TAG = "Client";
 
 using td::td_api::updateAuthorizationState;
@@ -48,8 +49,6 @@ using td::td_api::checkAuthenticationCode;
 using td::td_api::destroy;
 using td::td_api::checkDatabaseEncryptionKey;
 using td::td_api::checkAuthenticationPassword;
-
-using jltx::debug::Log;
 
 TermgramClient::TermgramClient(const AppConfiguration& app_config)
 :   m_app_config(app_config)

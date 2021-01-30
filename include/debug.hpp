@@ -64,9 +64,6 @@ public:
     LOG_FUNCTION(v,  2, "VERBOSE");
 };
 
-/** Standard Logger to stdout */
-const Logger Log(stdout);
-
 }   // namespace debug
 }   // namespace jltx
 

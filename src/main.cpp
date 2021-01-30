@@ -18,12 +18,20 @@
 
 #include <unistd.h>
 
+#include <cstdio>
+
 #include <string>
+
+#include <debug.hpp>
 
 #include "AppConfiguration.hpp"
 #include "TermgramClient.hpp"
 
-bool ValidateAppConfig(const AppConfiguration& app_config) {
+static const char* LOG_PATH = "log.txt";
+static FILE* LOG_FILE = fopen(LOG_PATH, "w");
+jltx::debug::Logger Log(LOG_FILE);
+
+static bool ValidateAppConfig(const AppConfiguration& app_config) {
     const bool api_id_error = (app_config.api_id == -1);
     const bool api_hash_error = (app_config.api_hash.compare("") == 0);
 
@@ -34,7 +42,7 @@ bool ValidateAppConfig(const AppConfiguration& app_config) {
     return true;
 }
 
-void ArgumentError(char* arg0) {
+static void ArgumentError(char* arg0) {
     fprintf(stderr, "Usage: %s [-t] <-i api_id> <-h api_hash>\n", arg0);
 }
 
@@ -75,5 +83,6 @@ int main(int argc, char *argv[]) {
     TermgramClient client(app_config);
     client.Run();
 
+    fclose(LOG_FILE);
     return 0;
 }
