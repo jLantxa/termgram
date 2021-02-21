@@ -114,6 +114,11 @@ private:
      * \param auth_state State of the authentication process.
      */
     void OnAuthStateUpdate(int32_t auth_state);
+    inline void OnAuthorizationStateWaitTdlibParameters();
+    inline void OnAuthorizationStateWaitEncryptionKey();
+    inline void OnAuthorizationStateWaitPhoneNumber();
+    inline void OnAuthorizationStateWaitCode();
+    inline void OnAuthorizationStateWaitPassword();
 
     /**
      * \brief Check a authentication response object for error.

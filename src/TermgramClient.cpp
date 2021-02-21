@@ -147,61 +147,23 @@ void TermgramClient::CheckAuthError(object_ptr<Object> object) {
 void TermgramClient::OnAuthStateUpdate(int32_t auth_state) {
     m_auth_state = auth_state;
     m_auth_query_id++;
+
     switch (auth_state) {
-        case authorizationStateWaitTdlibParameters::ID: {
-            Log.i(LOG_TAG, "%s(): authorizationStateWaitTdlibParameters", __func__);
-
-            auto parameters = td::td_api::make_object<tdlibParameters>();
-            parameters->use_test_dc_ = m_app_config.test_mode;
-            parameters->database_directory_ = "tdlib";
-            parameters->use_message_database_ = true;
-            parameters->use_secret_chats_ = false;
-            parameters->api_id_ = m_app_config.api_id;
-            parameters->api_hash_ = m_app_config.api_hash;
-            parameters->system_language_code_ = "en";
-            parameters->device_model_ = "Desktop";
-            parameters->application_version_ = m_app_config.version;
-            parameters->enable_storage_optimizer_ = true;
-            SendQuery(td::td_api::make_object<setTdlibParameters>(std::move(parameters)), AUTH_HANDLER);
-
+        case authorizationStateWaitTdlibParameters::ID:
+            OnAuthorizationStateWaitTdlibParameters();
             break;
-        }
 
-        case authorizationStateWaitEncryptionKey::ID: {
-            Log.i(LOG_TAG, "%s(): authorizationStateWaitEncryptionKey", __func__);
-
-            std::cout << "Enter encryption key or DESTROY: " << std::flush;
-            std::string key;
-            std::getline(std::cin, key);
-            if (key == "DESTROY") {
-                SendQuery(td::td_api::make_object<destroy>());
-            } else {
-                SendQuery(td::td_api::make_object<checkDatabaseEncryptionKey>(std::move(key)), AUTH_HANDLER);
-            }
-
+        case authorizationStateWaitEncryptionKey::ID:
+            OnAuthorizationStateWaitEncryptionKey();
             break;
-        }
 
-        case authorizationStateWaitPhoneNumber::ID: {
-            Log.i(LOG_TAG, "%s(): authorizationStateWaitPhoneNumber", __func__);
-
-            std::cout << "Enter phone number: " << std::flush;
-            std::string phone_number;
-            std::cin >> phone_number;
-            SendQuery(td::td_api::make_object<setAuthenticationPhoneNumber>(phone_number, nullptr), AUTH_HANDLER);
+        case authorizationStateWaitPhoneNumber::ID:
+            OnAuthorizationStateWaitPhoneNumber();
             break;
-        }
 
-        case authorizationStateWaitCode::ID: {
-            Log.i(LOG_TAG, "%s(): authorizationStateWaitCode", __func__);
-
-            std::cout << "Enter authentication code: " << std::flush;
-            std::string code;
-            std::cin >> code;
-            SendQuery(td::td_api::make_object<checkAuthenticationCode>(code), AUTH_HANDLER);
-
+        case authorizationStateWaitCode::ID:
+            OnAuthorizationStateWaitCode();
             break;
-        }
 
         case authorizationStateWaitOtherDeviceConfirmation::ID:
             Log.i(LOG_TAG, "%s(): authorizationStateWaitOtherDeviceConfirmation", __func__);
@@ -247,4 +209,62 @@ void TermgramClient::OnAuthStateUpdate(int32_t auth_state) {
             Log.v(LOG_TAG, "%s(): unhandled auth state update", __func__);
             break;
     }
+}
+
+void TermgramClient::OnAuthorizationStateWaitTdlibParameters() {
+    Log.i(LOG_TAG, "%s()", __func__);
+
+    auto parameters = td::td_api::make_object<tdlibParameters>();
+    parameters->use_test_dc_ = m_app_config.test_mode;
+    parameters->database_directory_ = "tdlib";
+    parameters->use_message_database_ = true;
+    parameters->use_secret_chats_ = false;
+    parameters->api_id_ = m_app_config.api_id;
+    parameters->api_hash_ = m_app_config.api_hash;
+    parameters->system_language_code_ = "en";
+    parameters->device_model_ = "Desktop";
+    parameters->application_version_ = m_app_config.version;
+    parameters->enable_storage_optimizer_ = true;
+
+    SendQuery(td::td_api::make_object<setTdlibParameters>(std::move(parameters)), AUTH_HANDLER);
+}
+
+void TermgramClient::OnAuthorizationStateWaitEncryptionKey() {
+    Log.i(LOG_TAG, "%s()", __func__);
+
+    std::cout << "Enter encryption key or DESTROY: " << std::flush;
+    std::string key;
+    std::getline(std::cin, key);
+    if (key == "DESTROY") {
+        SendQuery(td::td_api::make_object<destroy>());
+    } else {
+        SendQuery(td::td_api::make_object<checkDatabaseEncryptionKey>(std::move(key)), AUTH_HANDLER);
+    }
+}
+
+void TermgramClient::OnAuthorizationStateWaitPhoneNumber() {
+    Log.i(LOG_TAG, "%s()", __func__);
+
+    std::cout << "Enter phone number: " << std::flush;
+    std::string phone_number;
+    std::cin >> phone_number;
+    SendQuery(td::td_api::make_object<setAuthenticationPhoneNumber>(phone_number, nullptr), AUTH_HANDLER);
+}
+
+void TermgramClient::OnAuthorizationStateWaitCode() {
+    Log.i(LOG_TAG, "%s()", __func__);
+
+    std::cout << "Enter authentication code: " << std::flush;
+    std::string code;
+    std::cin >> code;
+    SendQuery(td::td_api::make_object<checkAuthenticationCode>(code), AUTH_HANDLER);
+}
+
+void TermgramClient::OnAuthorizationStateWaitPassword() {
+    Log.i(LOG_TAG, "%s()", __func__);
+
+    std::cout << "Enter authentication password: " << std::flush;
+    std::string password;
+    std::getline(std::cin, password);
+    SendQuery(td::td_api::make_object<checkAuthenticationPassword>(password), AUTH_HANDLER);
 }
