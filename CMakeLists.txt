@@ -18,3 +18,11 @@ target_sources(termgram PRIVATE
     ${SRC}/TermgramClient.cpp
     ${SRC}/main.cpp
 )
+add_executable(textbox-test)
+set(CMAKE_CXX_FLAGS "-O2 -Wall -Werror")
+set_property(TARGET textbox-test PROPERTY CXX_STANDARD 20)
+target_link_libraries(textbox-test PRIVATE Td::TdStatic ncursesw)
+target_sources(textbox-test PRIVATE
+    ${SRC}/ui/TextBox.cpp
+    ${TEST}/TextBoxTest.cpp
+)
