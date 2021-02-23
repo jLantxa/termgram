@@ -16,10 +16,13 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+#include <ncurses.h>
 #include <unistd.h>
 
+#include <csignal>
 #include <cstdio>
 
+#include <functional>
 #include <string>
 
 #include <debug.hpp>
@@ -80,9 +83,18 @@ int main(int argc, char *argv[]) {
         return -1;
     }
 
+    // TODO: Implement screens
+    // setlocale(LC_ALL, "");
+    // initscr();
+    // raw();
+    // cbreak();
+    // noecho();
+    // keypad(stdscr, true);
+
     TermgramClient client(app_config);
     client.Run();
 
     fclose(LOG_FILE);
+    // endwin();
     return 0;
 }

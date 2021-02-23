@@ -16,7 +16,10 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+#include <ncurses.h>
+
 #include <iostream>
+#include <thread>
 
 #include <td/telegram/Client.h>
 #include <td/telegram/td_api.h>
@@ -52,9 +55,15 @@ using td::td_api::checkAuthenticationPassword;
 
 TermgramClient::TermgramClient(const AppConfiguration& app_config)
 :   m_app_config(app_config)
+    // TODO: Implement screens
+    // m_current_screen(m_auth_screen)
 {
-    td::ClientManager::execute(td::td_api::make_object<setLogVerbosityLevel>(1));
+    td::ClientManager::execute(td::td_api::make_object<setLogVerbosityLevel>(0));
     Init();
+}
+
+TermgramClient::~TermgramClient() {
+    clear();
 }
 
 void TermgramClient::Init() {
@@ -77,21 +86,47 @@ void TermgramClient::Quit() {
     m_running = false;
 }
 
+void TermgramClient::HandleTerminalInput(int ch) {
+    // TODO: Implement screens
+    switch (ch) {
+    case KEY_RESIZE:
+        // m_current_screen.OnTerminalResize();
+        break;
+
+    default:
+        // m_current_screen.Input(ch);
+        break;
+    }
+}
+
 void TermgramClient::Run() {
     m_running = true;
 
     Log.i(LOG_TAG, "Client starts");
+
+    std::thread event_thread([&](){
+        while (m_running) {
+            if (m_need_restart) {
+                Restart();
+            }
+            if (!m_authorised) {
+                ProcessResponse(m_client_manager->receive(10));
+            } else {
+                // TODO: Authorised
+                Quit();
+            }
+        }
+    });
+
     while (m_running) {
-        if (m_need_restart) {
-            Restart();
-        }
-        if (!m_authorised) {
-            ProcessResponse(m_client_manager->receive(10));
-        } else {
-            // TODO: Authorised
-            Quit();
-        }
+        wint_t ch;
+        get_wch(&ch);
+        HandleTerminalInput(ch);
+        // TODO: Implement screens
+        // m_current_screen.Draw();
     }
+
+    event_thread.join();
 }
 
 void TermgramClient::SendQuery(object_ptr<td::td_api::Function> function, QueryHandler handler) {
@@ -232,7 +267,9 @@ void TermgramClient::OnAuthorizationStateWaitTdlibParameters() {
 void TermgramClient::OnAuthorizationStateWaitEncryptionKey() {
     Log.i(LOG_TAG, "%s()", __func__);
 
-    std::cout << "Enter encryption key or DESTROY: " << std::flush;
+    // TODO: Implement screens
+    // m_auth_screen.SetTitle("Encryption key (or DESTROY)");
+    std::cout << "Encryption key (or DESTROY): ";
     std::string key;
     std::getline(std::cin, key);
     if (key == "DESTROY") {

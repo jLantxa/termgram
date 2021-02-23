@@ -6,5 +6,8 @@ td/
 # Database
 tdlib/
 
+# Logs
+log.txt
+
 build/
 doc/

@@ -37,6 +37,7 @@ using QueryHandler = std::function<void(object_ptr<Object>)>;
 class TermgramClient final {
 public:
     TermgramClient(const AppConfiguration& app_config);
+    ~TermgramClient();
 
     /**
      * \brief Start execution of the client
@@ -55,6 +56,12 @@ private:
      * client manager and the query ids to 0.
      */
     void Restart();
+
+    /**
+     * \brief Handle terminal input
+     * \param ch Input character
+     */
+    void HandleTerminalInput(int ch);
 
     /** \brief Stop running the main loop effectively quitting */
     inline void Quit();
@@ -88,6 +95,9 @@ private:
      * to be executed when a response with that id is received.
      */
     std::unordered_map<uint64_t, QueryHandler> m_query_handlers;
+
+    // TODO: Implement screens
+    // TerminalScreen& m_current_screen;
 
     /**
      * \brief Send a query to the Telegram server.
