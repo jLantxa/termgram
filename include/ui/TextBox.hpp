@@ -24,6 +24,9 @@
 #include <list>
 #include <string>
 
+/**
+ * \brief A textbox widget for text input. It supports wide characters by default.
+ */
 class TextBox {
 public:
     TextBox(std::wstring title, unsigned int m_max_length);
