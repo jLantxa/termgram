@@ -1,5 +1,5 @@
 /*
- * termgram
+ * tgram
  * Copyright (C) 2021  Javier Lancha Vázquez
  *
  * This program is free software: you can redistribute it and/or modify
@@ -28,7 +28,7 @@
 #include <debug.hpp>
 
 #include "AppConfiguration.hpp"
-#include "TermgramClient.hpp"
+#include "TGramClient.hpp"
 
 static const char* LOG_PATH = "log.txt";
 static FILE* LOG_FILE = fopen(LOG_PATH, "w");
@@ -91,7 +91,7 @@ int main(int argc, char *argv[]) {
     // noecho();
     // keypad(stdscr, true);
 
-    TermgramClient client(app_config);
+    TGramClient client(app_config);
     client.Run();
 
     fclose(LOG_FILE);

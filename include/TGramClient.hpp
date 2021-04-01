@@ -1,5 +1,5 @@
 /*
- * termgram
+ * tgram
  * Copyright (C) 2021  Javier Lancha Vázquez
  *
  * This program is free software: you can redistribute it and/or modify
@@ -34,10 +34,10 @@ using td::td_api::Object;
 
 using QueryHandler = std::function<void(object_ptr<Object>)>;
 
-class TermgramClient final {
+class TGramClient final {
 public:
-    TermgramClient(const AppConfiguration& app_config);
-    ~TermgramClient();
+    TGramClient(const AppConfiguration& app_config);
+    ~TGramClient();
 
     /**
      * \brief Start execution of the client

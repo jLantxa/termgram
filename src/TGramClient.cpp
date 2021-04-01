@@ -1,5 +1,5 @@
 /*
- * termgram
+ * tgram
  * Copyright (C) 2021  Javier Lancha Vázquez
  *
  * This program is free software: you can redistribute it and/or modify
@@ -26,7 +26,7 @@
 
 #include "debug.hpp"
 
-#include "TermgramClient.hpp"
+#include "TGramClient.hpp"
 
 extern jltx::debug::Logger Log;
 static __attribute_used__ const char* LOG_TAG = "Client";
@@ -53,7 +53,7 @@ using td::td_api::destroy;
 using td::td_api::checkDatabaseEncryptionKey;
 using td::td_api::checkAuthenticationPassword;
 
-TermgramClient::TermgramClient(const AppConfiguration& app_config)
+TGramClient::TGramClient(const AppConfiguration& app_config)
 :   m_app_config(app_config)
     // TODO: Implement screens
     // m_current_screen(m_auth_screen)
@@ -62,11 +62,11 @@ TermgramClient::TermgramClient(const AppConfiguration& app_config)
     Init();
 }
 
-TermgramClient::~TermgramClient() {
+TGramClient::~TGramClient() {
     clear();
 }
 
-void TermgramClient::Init() {
+void TGramClient::Init() {
     m_client_manager = std::make_unique<td::ClientManager>();
     m_client_id = m_client_manager->create_client_id();
     m_query_id = 0;
@@ -76,17 +76,17 @@ void TermgramClient::Init() {
     SendQuery(td::td_api::make_object<td::td_api::getOption>("version"));
 }
 
-void TermgramClient::Restart() {
+void TGramClient::Restart() {
     Log.i(LOG_TAG, "%s()", __func__);
     m_client_manager.reset();
     Init();
 }
 
-void TermgramClient::Quit() {
+void TGramClient::Quit() {
     m_running = false;
 }
 
-void TermgramClient::HandleTerminalInput(int ch) {
+void TGramClient::HandleTerminalInput(int ch) {
     // TODO: Implement screens
     switch (ch) {
     case KEY_RESIZE:
@@ -99,7 +99,7 @@ void TermgramClient::HandleTerminalInput(int ch) {
     }
 }
 
-void TermgramClient::Run() {
+void TGramClient::Run() {
     m_running = true;
 
     Log.i(LOG_TAG, "Client starts");
@@ -129,7 +129,7 @@ void TermgramClient::Run() {
     event_thread.join();
 }
 
-void TermgramClient::SendQuery(object_ptr<td::td_api::Function> function, QueryHandler handler) {
+void TGramClient::SendQuery(object_ptr<td::td_api::Function> function, QueryHandler handler) {
     if (handler) {
         m_query_handlers.emplace(m_query_id, handler);
     }
@@ -138,7 +138,7 @@ void TermgramClient::SendQuery(object_ptr<td::td_api::Function> function, QueryH
     m_query_id++;
 }
 
-void TermgramClient::ProcessResponse(td::ClientManager::Response response) {
+void TGramClient::ProcessResponse(td::ClientManager::Response response) {
     if (!response.object) {
         Log.v(LOG_TAG, "%s(): Received null response object", __func__);
         return;
@@ -157,7 +157,7 @@ void TermgramClient::ProcessResponse(td::ClientManager::Response response) {
     }
 }
 
-void TermgramClient::OnUpdate(object_ptr<Object> update) {
+void TGramClient::OnUpdate(object_ptr<Object> update) {
     const int32_t update_id = update->get_id();
     switch (update_id) {
         case updateAuthorizationState::ID: {
@@ -173,13 +173,13 @@ void TermgramClient::OnUpdate(object_ptr<Object> update) {
     }
 }
 
-void TermgramClient::CheckAuthError(object_ptr<Object> object) {
+void TGramClient::CheckAuthError(object_ptr<Object> object) {
     if (object->get_id() == td::td_api::error::ID) {
         OnAuthStateUpdate(m_auth_state);
     }
 }
 
-void TermgramClient::OnAuthStateUpdate(int32_t auth_state) {
+void TGramClient::OnAuthStateUpdate(int32_t auth_state) {
     m_auth_state = auth_state;
     m_auth_query_id++;
 
@@ -246,7 +246,7 @@ void TermgramClient::OnAuthStateUpdate(int32_t auth_state) {
     }
 }
 
-void TermgramClient::OnAuthorizationStateWaitTdlibParameters() {
+void TGramClient::OnAuthorizationStateWaitTdlibParameters() {
     Log.i(LOG_TAG, "%s()", __func__);
 
     auto parameters = td::td_api::make_object<tdlibParameters>();
@@ -264,7 +264,7 @@ void TermgramClient::OnAuthorizationStateWaitTdlibParameters() {
     SendQuery(td::td_api::make_object<setTdlibParameters>(std::move(parameters)), AUTH_HANDLER);
 }
 
-void TermgramClient::OnAuthorizationStateWaitEncryptionKey() {
+void TGramClient::OnAuthorizationStateWaitEncryptionKey() {
     Log.i(LOG_TAG, "%s()", __func__);
 
     // TODO: Implement screens
@@ -279,7 +279,7 @@ void TermgramClient::OnAuthorizationStateWaitEncryptionKey() {
     }
 }
 
-void TermgramClient::OnAuthorizationStateWaitPhoneNumber() {
+void TGramClient::OnAuthorizationStateWaitPhoneNumber() {
     Log.i(LOG_TAG, "%s()", __func__);
 
     std::cout << "Enter phone number: " << std::flush;
@@ -288,7 +288,7 @@ void TermgramClient::OnAuthorizationStateWaitPhoneNumber() {
     SendQuery(td::td_api::make_object<setAuthenticationPhoneNumber>(phone_number, nullptr), AUTH_HANDLER);
 }
 
-void TermgramClient::OnAuthorizationStateWaitCode() {
+void TGramClient::OnAuthorizationStateWaitCode() {
     Log.i(LOG_TAG, "%s()", __func__);
 
     std::cout << "Enter authentication code: " << std::flush;
@@ -297,7 +297,7 @@ void TermgramClient::OnAuthorizationStateWaitCode() {
     SendQuery(td::td_api::make_object<checkAuthenticationCode>(code), AUTH_HANDLER);
 }
 
-void TermgramClient::OnAuthorizationStateWaitPassword() {
+void TGramClient::OnAuthorizationStateWaitPassword() {
     Log.i(LOG_TAG, "%s()", __func__);
 
     std::cout << "Enter authentication password: " << std::flush;

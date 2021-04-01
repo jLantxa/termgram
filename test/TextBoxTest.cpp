@@ -1,5 +1,5 @@
 /*
- * termgram
+ * tgram
  * Copyright (C) 2021  Javier Lancha Vázquez
  *
  * This program is free software: you can redistribute it and/or modify
