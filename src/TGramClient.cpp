@@ -55,8 +55,6 @@ using td::td_api::checkAuthenticationPassword;
 
 TGramClient::TGramClient(const AppConfiguration& app_config)
 :   m_app_config(app_config)
-    // TODO: Implement screens
-    // m_current_screen(m_auth_screen)
 {
     td::ClientManager::execute(td::td_api::make_object<setLogVerbosityLevel>(0));
     Init();
@@ -87,14 +85,11 @@ void TGramClient::Quit() {
 }
 
 void TGramClient::HandleTerminalInput(int ch) {
-    // TODO: Implement screens
     switch (ch) {
     case KEY_RESIZE:
-        // m_current_screen.OnTerminalResize();
         break;
 
     default:
-        // m_current_screen.Input(ch);
         break;
     }
 }
@@ -122,8 +117,6 @@ void TGramClient::Run() {
         wint_t ch;
         get_wch(&ch);
         HandleTerminalInput(ch);
-        // TODO: Implement screens
-        // m_current_screen.Draw();
     }
 
     event_thread.join();
@@ -267,8 +260,6 @@ void TGramClient::OnAuthorizationStateWaitTdlibParameters() {
 void TGramClient::OnAuthorizationStateWaitEncryptionKey() {
     Log.i(LOG_TAG, "%s()", __func__);
 
-    // TODO: Implement screens
-    // m_auth_screen.SetTitle("Encryption key (or DESTROY)");
     std::cout << "Encryption key (or DESTROY): ";
     std::string key;
     std::getline(std::cin, key);

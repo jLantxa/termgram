@@ -18,38 +18,43 @@
 
 #include <ncurses.h>
 
+#include <cmath>
+
 #include <iostream>
 #include <string>
 
 #include "ui/keyboard.hpp"
 #include "ui/TextBox.hpp"
 
-TextBox::TextBox(std::wstring title, unsigned int max_length) : m_max_length(max_length) {
-    UpdateScreenBounds();
-    m_text_box = newwin(EDIT_HEIGHT + 2, m_screen_cols, 0, 0);
+TextBox::TextBox(Rect rect, std::wstring title, unsigned int max_length)
+:   m_rect(rect), m_max_length(max_length)
+{
+    m_outter_window = newwin(
+        m_rect.Height(),
+        m_rect.Width(),
+        m_rect.Top(),
+        m_rect.Left());
+    m_text_box = newwin(
+        m_rect.Height() - 2,
+        m_rect.Width() - 2,
+        m_rect.Top() + 1,
+        m_rect.Left() + 1);
     SetTitle(title);
+    m_max_length = std::min(m_max_length, (m_rect.Width()) - 2);
 }
 
 TextBox::~TextBox() {
     werase(m_text_box);
-}
-
-void TextBox::UpdateScreenBounds() {
-    getmaxyx(stdscr, m_screen_rows, m_screen_cols);
-}
-
-void TextBox::OnTerminalResize() {
-    UpdateScreenBounds();
-    wresize(m_text_box, EDIT_HEIGHT + 2, m_screen_cols);
-    Draw();
+    werase(m_outter_window);
 }
 
 void TextBox::Draw() {
     wclear(m_text_box);
     DrawBox();
-    mvwaddwstr(m_text_box, 0, 1, m_title.c_str());
-    mvwaddwstr(m_text_box, 1, 1, m_text.c_str());
-    wmove(m_text_box, 1, 1 + m_col_cursor);
+    mvwaddwstr(m_outter_window, 0, 1, m_title.c_str());
+    mvwaddwstr(m_text_box, 0, 0, m_text.c_str());
+    wmove(m_text_box, 0, m_col_cursor);
+    wrefresh(m_outter_window);
     wrefresh(m_text_box);
 }
 
@@ -62,7 +67,7 @@ void TextBox::Clear() {
 }
 
 void TextBox::DrawBox() {
-    box(m_text_box, 0, 0);
+    box(m_outter_window, 0, 0);
 }
 
 void TextBox::SetTitle(std::wstring title) {

@@ -43,7 +43,7 @@ int main(int argc, char *argv[]) {
     cbreak();
     noecho();
 
-    TextBox text_box(L"Input text", 64);
+    TextBox text_box(Rect{0, 0, 32, 4}, L"Input text", 64);
 
     TitleListener title_listener;
     ClearListener clear_listener;

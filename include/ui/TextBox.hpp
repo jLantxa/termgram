@@ -24,12 +24,14 @@
 #include <list>
 #include <string>
 
+#include "Terminal.hpp"
+
 /**
  * \brief A textbox widget for text input. It supports wide characters by default.
  */
 class TextBox {
 public:
-    TextBox(std::wstring title, unsigned int m_max_length);
+    TextBox(Rect rect, std::wstring title, unsigned int m_max_length);
     virtual ~TextBox();
 
     /**
@@ -53,11 +55,6 @@ public:
      * \brief Draw the TextBox widget into the screen.
      */
     void Draw();
-
-    /**
-     * \brief A callback to handle teminal resize events.
-     */
-    void OnTerminalResize();
 
     /**
      * \brief Return the std::wstring representation of the contents of the TextBox.
@@ -98,8 +95,7 @@ public:
     void Clear();
 
 private:
-    unsigned int m_screen_rows;
-    unsigned int m_screen_cols;
+    Rect m_rect;
     unsigned int m_max_length;
 
     /** Number of editable rows */
@@ -110,13 +106,9 @@ private:
     std::wstring m_text;
     std::wstring m_title;
     WINDOW* m_text_box;
+    WINDOW* m_outter_window;
 
     std::list<Listener*> m_listeners;
-
-    /**
-     * \brief Update the size of the TextBox
-     */
-    void UpdateScreenBounds();
 
     /**
      * \brief Move one character to the left.
